@@ -38,7 +38,6 @@ public class LoadbalancerImpl implements Loadbalancer{
         String userGroup = usersGroups.get(userId);
         if (userGroup == null) {
             userGroup = assignUserGroup(userId);
-            logger.info("New user group assigned: " + userGroup);
         }
         return userGroup;
     }
@@ -54,6 +53,7 @@ public class LoadbalancerImpl implements Loadbalancer{
                 .get()
                 .getKey();
         usersGroups.put(userId, userGroup);
+        logger.info("New user group assigned: " + userGroup);
         return userGroup;
     }
 

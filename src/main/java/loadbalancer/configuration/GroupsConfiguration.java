@@ -50,6 +50,7 @@ public class GroupsConfiguration {
 
         while (iterator.hasNext()) {
             currentEntry = iterator.next();
+
             previousEnd = groupsRanges.get(entry.getKey()).getEnd();
             if (iterator.hasNext()) {
                 groupsRanges.put(currentEntry.getKey(), new Range(previousEnd + 1, previousEnd + currentEntry.getValue()));

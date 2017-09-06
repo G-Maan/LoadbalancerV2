@@ -32,25 +32,26 @@ public class LoadbalancerImplTest {
     public void shouldAssignUserToAGroup() throws Exception {
         //given
         String userId = "abc:123"; //Hashcode -1207594214
-
-        //when
         when(groupsConfiguration.getGroupsRanges()).thenReturn(groupsConfigurationRanges);
 
+        //when
         String group = loadbalancer.getUserGroup(userId);
 
+        //then
         Assert.assertEquals("groupB", group);
     }
 
     @Test
     public void shouldReturnSameUserGroupAsAssigned() throws Exception {
+        //given
         String userId = "123:abc"; //Hashcode 2018388762
-
         when(groupsConfiguration.getGroupsRanges()).thenReturn(groupsConfigurationRanges);
 
+        //when
         String group = loadbalancer.getUserGroup(userId);
-
         String groupRetry = loadbalancer.getUserGroup(userId);
 
+        //then
         Assert.assertEquals(group, groupRetry);
     }
 
