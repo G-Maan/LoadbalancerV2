@@ -1,14 +1,11 @@
 package loadbalancer.logic;
 
 import loadbalancer.configuration.GroupsConfiguration;
-import loadbalancer.logic.Loadbalancer;
-import loadbalancer.logic.LoadbalancerImpl;
 import loadbalancer.model.Range;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -33,8 +30,10 @@ public class LoadbalancerImplTest {
 
     @Test
     public void shouldAssignUserToAGroup() throws Exception {
+        //given
         String userId = "abc:123"; //Hashcode -1207594214
 
+        //when
         when(groupsConfiguration.getGroupsRanges()).thenReturn(groupsConfigurationRanges);
 
         String group = loadbalancer.getUserGroup(userId);
@@ -50,8 +49,6 @@ public class LoadbalancerImplTest {
 
         String group = loadbalancer.getUserGroup(userId);
 
-        Assert.assertEquals("groupC", group);
-
         String groupRetry = loadbalancer.getUserGroup(userId);
 
         Assert.assertEquals(group, groupRetry);
@@ -59,9 +56,9 @@ public class LoadbalancerImplTest {
 
     private void initializeGroupsConfigurationMap() {
         groupsConfigurationRanges = new LinkedHashMap<>();
-        groupsConfigurationRanges.put("groupA", new Range(BigInteger.valueOf(Integer.MIN_VALUE), BigInteger.valueOf(-1288490189)));
-        groupsConfigurationRanges.put("groupB", new Range(BigInteger.valueOf(-1288490188), BigInteger.valueOf(-1)));
-        groupsConfigurationRanges.put("groupC", new Range(BigInteger.ZERO, BigInteger.valueOf(Integer.MAX_VALUE)));
+        groupsConfigurationRanges.put("groupA", new Range(Integer.MIN_VALUE, -1288490189));
+        groupsConfigurationRanges.put("groupB", new Range(-1288490188, -1));
+        groupsConfigurationRanges.put("groupC", new Range(0, Integer.MAX_VALUE));
     }
 
 }

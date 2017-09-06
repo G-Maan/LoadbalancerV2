@@ -37,17 +37,24 @@ public class LoadbalancerImpl implements Loadbalancer{
     private String calculateGroup(String userId) {
         String userGroup = usersGroups.get(userId);
         if (userGroup == null) {
-            int hashcode = hashUserId(userId);
-            userGroup = assignUserGroup(hashcode);
-            usersGroups.put(userId, userGroup);
+            userGroup = assignUserGroup(userId);
             logger.info("New user group assigned: " + userGroup);
         }
-        System.out.println(userGroup); //TODO: to be removed
         return userGroup;
     }
 
-    private String assignUserGroup(int userIdHashcode) {
-        return groupsConfiguration.getGroupsRanges().entrySet().stream().filter(entry -> entry.getValue().includes(userIdHashcode)).findFirst().get().getKey();
+    private String assignUserGroup(String userId) {
+        int userIdHashcode = hashUserId(userId);
+        String userGroup = groupsConfiguration
+                .getGroupsRanges()
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().includes(userIdHashcode))
+                .findFirst()
+                .get()
+                .getKey();
+        usersGroups.put(userId, userGroup);
+        return userGroup;
     }
 
 }

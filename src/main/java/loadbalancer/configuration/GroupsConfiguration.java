@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -19,9 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @PropertySource(value = {"groups-configuration.properties"})
 public class GroupsConfiguration {
 
-    private static final BigInteger MAX_RANGE = BigInteger.valueOf(Integer.MAX_VALUE); //Max possible hashcode
-    private static final BigInteger MIN_RANGE = BigInteger.valueOf(Integer.MIN_VALUE); //Min possible hashcode
+    private static final int MAX_RANGE = Integer.MAX_VALUE; //Max possible hashcode
+    private static final int MIN_RANGE = Integer.MIN_VALUE; //Min possible hashcode
     private static final int MAX_PERCENTAGE = 100;
+    private static final BigInteger INTEGER_RANGE = BigInteger.valueOf(MIN_RANGE).abs().add(BigInteger.valueOf(MAX_RANGE));
 
     @Value("#{${groups}}")
     private Map<String, Integer> groupsConfiguration = new LinkedHashMap<>();
@@ -38,31 +40,37 @@ public class GroupsConfiguration {
     }
 
     private void calculateGroupRanges() {
-        Map<String, BigInteger> ranges = new LinkedHashMap<>();
+        Map<String, Integer> ranges = initializeRanges();
+
+        Iterator<Entry<String, Integer>> iterator = ranges.entrySet().iterator();
+        Entry<String, Integer> entry = iterator.next();
+        groupsRanges.put(entry.getKey(), new Range(MIN_RANGE, MIN_RANGE + entry.getValue()));
+        Entry<String, Integer> currentEntry;
+        int previousEnd;
+
+        while (iterator.hasNext()) {
+            currentEntry = iterator.next();
+            previousEnd = groupsRanges.get(entry.getKey()).getEnd();
+            if (iterator.hasNext()) {
+                groupsRanges.put(currentEntry.getKey(), new Range(previousEnd + 1, previousEnd + currentEntry.getValue()));
+                entry = currentEntry;
+            } else {
+                groupsRanges.put(currentEntry.getKey(), new Range(previousEnd + 1, MAX_RANGE));
+            }
+        }
+    }
+
+    private Map<String, Integer> initializeRanges() {
+        Map<String, Integer> ranges = new LinkedHashMap<>();
         groupsConfiguration.entrySet().forEach(entry ->
                 ranges.put(entry.getKey(),
                         calculateRangePercentage(entry.getValue())
                 )
         );
-        Iterator<Map.Entry<String, BigInteger>> iterator = ranges.entrySet().iterator();
-        Map.Entry<String, BigInteger> entry = iterator.next();
-        groupsRanges.put(entry.getKey(), new Range(MIN_RANGE, MIN_RANGE.add(entry.getValue())));
-        Map.Entry<String, BigInteger> currentEntry;
-        Range previousRange;
-        while (iterator.hasNext()) {
-            currentEntry = iterator.next();
-            previousRange = groupsRanges.get(entry.getKey());
-            if (iterator.hasNext()) {
-                groupsRanges.put(currentEntry.getKey(), new Range(previousRange.getEnd().add(BigInteger.ONE), previousRange.getEnd().add(currentEntry.getValue())));
-                entry = currentEntry;
-            } else {
-                groupsRanges.put(currentEntry.getKey(), new Range(previousRange.getEnd().add(BigInteger.ONE), MAX_RANGE));
-            }
-        }
+        return ranges;
     }
 
-    private BigInteger calculateRangePercentage(Integer percentage) {
-        BigInteger range = MIN_RANGE.abs().add(MAX_RANGE).abs();
-        return range.multiply(BigInteger.valueOf(percentage)).divide(BigInteger.valueOf(MAX_PERCENTAGE));
+    private int calculateRangePercentage(Integer percentage) {
+        return INTEGER_RANGE.multiply(BigInteger.valueOf(percentage)).divide(BigInteger.valueOf(MAX_PERCENTAGE)).intValue();
     }
 }
