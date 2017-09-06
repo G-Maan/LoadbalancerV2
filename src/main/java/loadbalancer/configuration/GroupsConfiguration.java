@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.math.BigInteger.valueOf;
+
 /**
  * Created by Pawel Mielniczuk on 2017-08-31.
  */
@@ -23,7 +25,7 @@ public class GroupsConfiguration {
     private static final int MAX_RANGE = Integer.MAX_VALUE; //Max possible hashcode
     private static final int MIN_RANGE = Integer.MIN_VALUE; //Min possible hashcode
     private static final int MAX_PERCENTAGE = 100;
-    private static final BigInteger INTEGER_RANGE = BigInteger.valueOf(MIN_RANGE).abs().add(BigInteger.valueOf(MAX_RANGE));
+    private static final BigInteger INTEGER_RANGE = valueOf(MIN_RANGE).abs().add(valueOf(MAX_RANGE));
 
     @Value("#{${groups}}")
     private Map<String, Integer> groupsConfiguration = new LinkedHashMap<>();
@@ -72,6 +74,6 @@ public class GroupsConfiguration {
     }
 
     private int calculateRangePercentage(Integer percentage) {
-        return INTEGER_RANGE.multiply(BigInteger.valueOf(percentage)).divide(BigInteger.valueOf(MAX_PERCENTAGE)).intValue();
+        return INTEGER_RANGE.multiply(valueOf(percentage)).divide(valueOf(MAX_PERCENTAGE)).intValue();
     }
 }

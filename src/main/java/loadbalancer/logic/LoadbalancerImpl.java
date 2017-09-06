@@ -57,4 +57,8 @@ public class LoadbalancerImpl implements Loadbalancer{
         return userGroup;
     }
 
+    @Override
+    public Map<String, String> getUserGroups() {
+        return usersGroups;
+    }
 }
