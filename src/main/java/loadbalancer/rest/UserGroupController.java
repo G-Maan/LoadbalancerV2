@@ -1,6 +1,6 @@
 package loadbalancer.rest;
 
-import loadbalancer.logic.LoadbalancerImpl;
+import loadbalancer.logic.Loadbalancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserGroupController {
 
+    private Loadbalancer loadbalancer;
+
     @Autowired
-    private LoadbalancerImpl loadbalancerImpl;
+    public UserGroupController(Loadbalancer loadbalancer) {
+        this.loadbalancer = loadbalancer;
+    }
 
     @GetMapping(value = "/route")
     public String getUserGroup(@RequestParam(value = "id") String userId) {
-        return loadbalancerImpl.getUserGroup(userId);
+        return loadbalancer.getUserGroup(userId);
     }
 
 }

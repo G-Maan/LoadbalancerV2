@@ -59,6 +59,6 @@ public class LoadbalancerImpl implements Loadbalancer{
 
     @Override
     public Map<String, String> getUserGroups() {
-        return usersGroups;
+        return new ConcurrentHashMap<>(usersGroups);
     }
 }

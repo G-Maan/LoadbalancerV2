@@ -33,6 +33,7 @@ public class LoadbalancerImplTest {
     public void shouldAssignUserToAGroup() throws Exception {
         //given
         String userId = "abc:123"; //Hashcode -1207594214
+
         when(groupsConfiguration.getGroupsRanges()).thenReturn(groupsConfigurationRanges);
 
         //when
@@ -46,6 +47,7 @@ public class LoadbalancerImplTest {
     public void shouldReturnSameUserGroupAsAssigned() throws Exception {
         //given
         String userId = "123:abc"; //Hashcode 2018388762
+
         when(groupsConfiguration.getGroupsRanges()).thenReturn(groupsConfigurationRanges);
 
         //when
@@ -69,6 +71,7 @@ public class LoadbalancerImplTest {
         String userId8 = "IXsn0mKzhA"; //Hashcode 1570281135
         String userId9 = "ac2mDOhTEd"; //Hashcode 786439699
         String userId10 = "oy8XQN4PVd"; //Hashcode 1999847697
+
         when(groupsConfiguration.getGroupsRanges()).thenReturn(groupsConfigurationRanges);
 
         //when
